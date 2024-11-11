@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Need Blood</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        .popup.success { background-color: green; }
+        .popup.error { background-color: red; }
+    </style>
+</head>
+<body>
+    <h2>Need Blood</h2>
+    <form method="POST">
+        <input type="text" name="blood_type" placeholder="Enter Blood Type (e.g., A+, O-)" required>
+        <button type="submit">Search Donors</button>
+    </form>
+    <a href="{{ url_for('index') }}">Return to Home</a>
+
+    <!-- Display Donors if found -->
+    {% if donors %}
+        <h3>Donors Available for Blood Type {{ request.form['blood_type'] }}</h3>
+        <ul>
+            {% for donor in donors %}
+                <li>
+                    <strong>Name:</strong> {{ donor[1] }} - 
+                    <strong>Blood Type:</strong> {{ donor[2] }} - 
+                    <strong>Age:</strong> {{ donor[3] }} - 
+                    <strong>Contact:</strong> {{ donor[4] }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Popup for flash messages -->
+    <div id="popup" class="popup"></div>
+
+    <script>
+        // Display popup flash messages
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                const popup = document.getElementById('popup');
+                {% for category, message in messages %}
+                    popup.classList.add("{{ category }}");
+                    popup.innerText = "{{ message }}";
+                    popup.style.display = "block";
+                    setTimeout(() => { popup.style.display = "none"; }, 3000);
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registered Donors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        h2 {
+            color: #C72C4A;
+        }
+        a {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #C72C4A;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #A0202A;
+        }
+    </style>
+</head>
+<body>
+    <h2>Registered Donors</h2>
+    <ul>
+        {% for donor in donors %}
+            <li>Reg No: {{ donor[0] }} - {{ donor[1] }} - {{ donor[2] }} - {{ donor[3] }} years old</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('index') }}">Return to Home</a>
+</body>
+</html>

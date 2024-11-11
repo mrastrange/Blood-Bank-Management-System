@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request Blood</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        .popup.success { background-color: green; }
+        .popup.error { background-color: red; }
+    </style>
+</head>
+<body>
+    <h2>Request Blood</h2>
+    <form method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="text" name="blood_type" placeholder="Blood Type" required>
+        <input type="number" name="age" placeholder="Age" required>
+        <input type="text" name="contact_info" placeholder="Contact Information" required>
+        <button type="submit">Submit Request</button>
+    </form>
+    <a href="{{ url_for('index') }}">Return to Home</a>
+
+    <!-- Popup for flash messages -->
+    <div id="popup" class="popup"></div>
+
+    <script>
+        // Display popup flash messages
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                const popup = document.getElementById('popup');
+                {% for category, message in messages %}
+                    popup.classList.add("{{ category }}");
+                    popup.innerText = "{{ message }}";
+                    popup.style.display = "block";
+                    setTimeout(() => { popup.style.display = "none"; }, 3000);
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </script>
+</body>
+</html>

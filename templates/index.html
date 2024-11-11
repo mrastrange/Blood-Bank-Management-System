@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blood Bank Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+        background-image: url("assets/background.jpg");
+        background-size: cover; /* Adjusts background to cover the entire viewport */
+        background-repeat: no-repeat; /* Prevents tiling */
+        }
+        h1 {
+            color: #C72C4A;
+        }
+        a {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #C72C4A;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #A0202A;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Blood Bank Management System</h1>
+    <p>Your contributions can save lives.</p>
+    <img src='/background.jpg' alt="rathakothipu" width="500" height="600">
+    <a href="{{ url_for('admin_login') }}">Admin Login</a>
+    <a href="{{ url_for('become_donor') }}">Become a Donor</a>
+    <a href="{{ url_for('need_blood') }}">Need Blood</a>
+</body>
+</html>
