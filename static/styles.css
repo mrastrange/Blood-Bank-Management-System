@@ -4,12 +4,12 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-image: url('/background.jpg');
 }
 
 h1, h2 {
     color: #C72C4A;
 }
+
 
 a {
     display: inline-block;
@@ -54,6 +54,7 @@ form {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="number"] {
     width: calc(100% - 22px);
     padding: 10px;

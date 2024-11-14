@@ -5,7 +5,14 @@
     <title>Admin Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
-        /* Styles for popup messages */
+        body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+        background-image: url("{{ url_for('static', filename='assets/background.jpg') }}");
+        background-size: cover; 
+        background-repeat: no-repeat; 
+        }
         .popup {
             display: none;
             position: fixed;
@@ -19,13 +26,21 @@
         }
         .popup.success { background-color: green; }
         .popup.error { background-color: red; }
+        .password-input {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
     <h2>Admin Login</h2>
     <form method="POST" action="{{ url_for('admin_login') }}">
         <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" id="password" name="password" class="password-input" placeholder="Password" required>
         <button type="submit">Login</button>
     </form>
     <a href="{{ url_for('index') }}">Return to Home</a>

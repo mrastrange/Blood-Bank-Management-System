@@ -14,7 +14,7 @@ def get_db_connection():
 
 def setup_database():
     with get_db_connection() as conn:
-        # Create tables if they don't exist
+        # Table creation 
         conn.execute('''CREATE TABLE IF NOT EXISTS Admin (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             username TEXT UNIQUE NOT NULL,
@@ -37,9 +37,9 @@ def setup_database():
                             contact_info TEXT
                         )''')
 
-        # Insert a sample admin for testing
-        admin_username = "a"
-        admin_password = hashlib.sha256("a".encode()).hexdigest()
+        # admin 
+        admin_username = "admin"
+        admin_password = hashlib.sha256("123".encode()).hexdigest()
         conn.execute("INSERT OR IGNORE INTO Admin (username, password) VALUES (?, ?)", 
                      (admin_username, admin_password))
         conn.commit()
@@ -49,7 +49,22 @@ setup_database()
 # SQL function to retrieve donors by blood group
 def get_donors_by_blood_type(blood_type):
     with get_db_connection() as conn:
-        donors = conn.execute("SELECT id, name, blood_type, age, contact_info FROM Donor WHERE blood_type = ?", (blood_type,)).fetchall()
+        # SQL query to select compatible donors based on blood type compatibility
+        donors = conn.execute("""
+            SELECT id, name, blood_type, age, contact_info
+            FROM Donor
+            WHERE 
+                CASE 
+                    WHEN ? = 'AB+' THEN blood_type IN ('A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-')
+                    WHEN ? = 'AB-' THEN blood_type IN ('A-', 'B-', 'AB-', 'O-')
+                    WHEN ? = 'A+' THEN blood_type IN ('A+', 'A-', 'O+', 'O-')
+                    WHEN ? = 'A-' THEN blood_type IN ('A-', 'O-')
+                    WHEN ? = 'B+' THEN blood_type IN ('B+', 'B-', 'O+', 'O-')
+                    WHEN ? = 'B-' THEN blood_type IN ('B-', 'O-')
+                    WHEN ? = 'O+' THEN blood_type IN ('O+', 'O-')
+                    WHEN ? = 'O-' THEN blood_type = 'O-'
+                END
+        """, (blood_type, blood_type, blood_type, blood_type, blood_type, blood_type, blood_type, blood_type)).fetchall()
     return donors
 
 @app.route('/need_blood', methods=['GET', 'POST'])
@@ -73,7 +88,7 @@ def need_blood():
 def index():
     return render_template('index.html')
 
-# Admin Login Page
+# Route to Admin Login Page
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
@@ -89,7 +104,7 @@ def admin_login():
             flash("Invalid login credentials", "error")
     return render_template('admin.html')
 
-# Admin Dashboard
+# Route to Admin Dashboard
 @app.route('/admin/dashboard')
 def admin_dashboard():
     if not session.get('admin_logged_in'):
@@ -101,31 +116,19 @@ def admin_dashboard():
     
     return render_template('dashboard.html', donors=donors, requests=requests)
 
-# Delete Request (Admin Only)
-@app.route('/admin/delete_request/<int:request_id>')
-def delete_request(request_id):
+# Route to Delete Donor (Admin Only)
+@app.route('/admin/delete_donor/<int:donor_id>')
+def delete_donor(donor_id):
     if session.get('admin_logged_in'):
         with get_db_connection() as conn:
-            conn.execute("DELETE FROM Request WHERE id = ?", (request_id,))
+            conn.execute("DELETE FROM Donor WHERE id = ?", (donor_id,))
             conn.commit()
+        flash("Donor deleted successfully.", "success")
+    else:
+        flash("You need to be logged in as an admin to delete a donor.", "error")
     return redirect(url_for('admin_dashboard'))
 
-# User Request Page
-@app.route('/request', methods=['GET', 'POST'])
-def request_blood():
-    if request.method == 'POST':
-        name = request.form['name']
-        blood_type = request.form['blood_type']
-        age = int(request.form['age'])
-        contact_info = request.form['contact_info']
-        with get_db_connection() as conn:
-            conn.execute("INSERT INTO Request (name, blood_type, age, contact_info) VALUES (?, ?, ?, ?)", 
-                         (name, blood_type, age, contact_info))
-            conn.commit()
-        flash("Request submitted successfully.")
-    return render_template('request.html')
-
-# Admin Logout
+# Route to Admin Logout
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('admin_logged_in', None)
@@ -146,7 +149,7 @@ def add_donor():
         flash("Donor added successfully.")
     return redirect(url_for('admin_dashboard'))
 
-# User Donor Signup Page
+# Route to User Donor Signup Page
 @app.route('/become_donor', methods=['GET', 'POST'])
 def become_donor():
     if request.method == 'POST':

@@ -9,9 +9,9 @@
         font-family: Arial, sans-serif;
         text-align: center;
         margin: 50px;
-        background-image: url("assets/background.jpg");
-        background-size: cover; /* Adjusts background to cover the entire viewport */
-        background-repeat: no-repeat; /* Prevents tiling */
+        background-image: url("{{ url_for('static', filename='assets/background.jpg') }}");
+        background-size: cover; 
+        background-repeat: no-repeat; 
         }
         h1 {
             color: #C72C4A;
@@ -33,7 +33,6 @@
 <body>
     <h1>Welcome to the Blood Bank Management System</h1>
     <p>Your contributions can save lives.</p>
-    <img src='/background.jpg' alt="rathakothipu" width="500" height="600">
     <a href="{{ url_for('admin_login') }}">Admin Login</a>
     <a href="{{ url_for('become_donor') }}">Become a Donor</a>
     <a href="{{ url_for('need_blood') }}">Need Blood</a>
