@@ -76,7 +76,7 @@ The application uses three tables:
 3. *Request:* Stores blood request details.
 
 ## License
-This project is open-source and available under the MIT License.
+This project is open-source and available under the [MIT License](LICENSE).
 
 
 
