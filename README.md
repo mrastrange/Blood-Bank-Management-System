@@ -28,7 +28,7 @@ A web-based application for managing blood donors, blood requests, and administr
 ### Installation Steps
 1. Clone the Repository.
 ```
-git clone https://github.com/your-username/blood-bank-management-system.git
+git clone https://github.com/mrastrange/blood-bank-management-system.git
 cd blood-bank-management-system
 ```
 2. Install Dependencies Install the required Python packages using pip.
